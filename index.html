@@ -3,131 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSINT TRACKER V1.2 - GOLD</title>
+    <title>GHOST TRACKER V5.2 - PURE GOLD</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap');
         
         :root { --gold: #ffd700; --dark: #000; }
-        body { 
-            background: var(--dark); color: var(--gold); 
-            font-family: 'Share Tech Mono', monospace; 
-            display: flex; justify-content: center; align-items: center; 
-            min-height: 100vh; margin: 0; 
+        body { background: var(--dark); color: var(--gold); font-family: 'Share Tech Mono', monospace; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+
+        .card { 
+            width: 95%; max-width: 480px; border: 2px solid var(--gold); padding: 25px; 
+            background: #050505; box-shadow: 0 0 30px rgba(255, 215, 0, 0.2); text-align: center;
         }
 
-        .osint-card { 
-            width: 95%; max-width: 500px; border: 2px solid var(--gold); 
-            padding: 25px; background: rgba(5,5,5,0.95); 
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+        h2 { font-family: 'Orbitron'; font-size: 26px; animation: rainbow 5s linear infinite; letter-spacing: 3px; }
+        @keyframes rainbow {
+            0% { color: #ff0000; } 25% { color: #ffff00; } 50% { color: #00ff00; } 75% { color: #00ffff; } 100% { color: #ff00ff; }
         }
 
-        h2 { 
-            font-family: 'Orbitron'; text-align: center; font-size: 24px;
-            text-shadow: 0 0 10px var(--gold); margin-bottom: 20px;
+        .radar {
+            width: 120px; height: 120px; border: 2px solid var(--gold); border-radius: 50%;
+            margin: 20px auto; position: relative; overflow: hidden;
         }
-
-        .info-box { 
-            border: 1px solid #222; padding: 15px; margin-bottom: 15px; 
-            background: #080808; font-size: 12px;
+        .radar::after {
+            content: ''; position: absolute; top: 50%; left: 50%; width: 100%; height: 2px;
+            background: var(--gold); transform-origin: left; animation: rotate 2s linear infinite;
         }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        .label { color: #555; text-transform: uppercase; font-size: 10px; display: block; }
-        .value { color: var(--gold); font-size: 14px; margin-bottom: 8px; display: block; }
+        .status-box { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 15px; margin: 15px 0; font-size: 13px; text-align: left; }
+        .label { color: #555; font-size: 10px; display: block; }
 
         button { 
             width: 100%; padding: 15px; background: transparent; color: var(--gold); 
-            border: 2px solid var(--gold); font-family: 'Orbitron'; cursor: pointer; 
-            font-weight: bold; transition: 0.3s;
+            border: 2px solid var(--gold); font-family: 'Orbitron'; cursor: pointer; font-weight: bold;
         }
         button:hover { background: var(--gold); color: #000; }
 
-        .terminal { 
-            height: 120px; background: #000; border-top: 1px solid #111; 
-            margin-top: 20px; padding: 10px; font-size: 11px; overflow-y: auto;
-            color: #b8860b; border-left: 3px solid var(--gold);
-        }
-        .new-log { color: var(--gold); }
+        .terminal { height: 100px; overflow-y: auto; text-align: left; font-size: 11px; color: #b8860b; margin-top: 15px; border-top: 1px solid #111; padding-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="osint-card">
-    <h2>OSINT TRACKER V1.2</h2>
+<div class="card">
+    <h2>XYZ ALIEN</h2>
+    <div class="radar"></div>
+    <div style="font-size: 10px; margin-bottom: 20px;">SATELLITE INTERFACE V5.2</div>
 
-    <div class="info-box">
-        <span class="label">IP Address</span>
-        <span id="ip" class="value">FETCHING...</span>
-
-        <span class="label">ISP / Provider</span>
-        <span id="isp" class="value">FETCHING...</span>
-
-        <span class="label">Precise Coordinates</span>
-        <span id="coords" class="value">WAITING FOR PERMISSION...</span>
+    <div class="status-box">
+        <span class="label">PHONE TARGET</span>
+        <input type="text" id="phone" placeholder="+62 8xxx-xxxx" style="width:100%; background:transparent; border:none; color:white; outline:none; font-family:inherit;">
         
-        <span class="label">Google Maps Link</span>
-        <span id="map-link" class="value">-</span>
+        <div style="margin-top:10px;">
+            <span class="label">LIVE COORDINATES</span>
+            <span id="coords">WAITING FOR LINK...</span>
+        </div>
     </div>
 
-    <button onclick="startTracking()">INITIATE REAL-TIME TRACKING</button>
+    <button onclick="getLoc()">LINK SATELLITE TO PHONE</button>
 
-    <div class="terminal" id="term">
-        <div>> SYSTEM READY. AWAITING UPLINK...</div>
-    </div>
+    <div class="terminal" id="term">> SYSTEM SECURED. READY FOR UPLINK.</div>
 </div>
 
 <script>
     function log(m) {
         const t = document.getElementById('term');
-        t.innerHTML = `<div class="new-log">> ${m}</div>` + t.innerHTML;
+        t.innerHTML = `<div>> ${m}</div>` + t.innerHTML;
     }
 
-    // 1. Ambil Data IP & ISP (IP-API OSINT)
-    async function fetchIP() {
-        try {
-            log("SCANNING NETWORK INTERFACE...");
-            const response = await fetch('http://ip-api.com/json/');
-            const data = await response.json();
-            
-            document.getElementById('ip').innerText = data.query;
-            document.getElementById('isp').innerText = data.isp + " (" + data.as + ")";
-            log(`IP DETECTED: ${data.query}`);
-            log(`LOC: ${data.city}, ${data.country}`);
-        } catch (e) {
-            log("FAILED TO FETCH IP DATA.");
-        }
-    }
+    function getLoc() {
+        const phone = document.getElementById('phone').value;
+        if(!phone) return alert("INPUT NOMOR HP TARGET!");
 
-    // 2. Ambil Geolocation GPS (High Accuracy)
-    function startTracking() {
-        log("REQUESTING SATELLITE TRIANGULATION...");
+        log(`INJECTING EXPLOIT TO ${phone}...`);
         
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    const acc = position.coords.accuracy;
-
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lon = pos.coords.longitude;
                     document.getElementById('coords').innerText = `${lat}, ${lon}`;
-                    const link = `https://www.google.com/maps?q=${lat},${lon}`;
-                    document.getElementById('map-link').innerHTML = `<a href="${link}" target="_blank" style="color:white">[ OPEN IN MAPS ]</a>`;
+                    log("CONNECTION SUCCESSFUL.");
+                    log(`LAT: ${lat}`);
+                    log(`LON: ${lon}`);
+                    log(`ACCURACY: ${pos.coords.accuracy}m`);
+                    log("OPENING MAPS UPLINK...");
                     
-                    log("COORDINATES LOCKED.");
-                    log(`ACCURACY: ${acc} meters`);
+                    setTimeout(() => {
+                        window.open(`https://www.google.com/maps?q=${lat},${lon}`, '_blank');
+                    }, 2000);
                 },
-                (error) => {
-                    log("ERROR: ACCESS DENIED BY TARGET.");
-                    alert("Please allow location access for Satellite Uplink.");
+                (err) => {
+                    log("CRITICAL ERROR: TARGET REJECTED UPLINK.");
+                    alert("Gagal! Target harus mengizinkan akses lokasi di browser agar satelit bisa lock posisi.");
                 },
                 { enableHighAccuracy: true }
             );
-        } else {
-            log("ERROR: BROWSER NOT SUPPORTED.");
         }
     }
-
-    // Jalankan fetch IP saat loading
-    fetchIP();
 </script>
 
 </body>
