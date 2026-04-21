@@ -3,93 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAT-LINK V1 - SATELLITE TRACKER</title>
+    <title>OSINT TRACKER V1.2 - GOLD</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap');
         
         :root { --gold: #ffd700; --dark: #000; }
-        body { background: var(--dark); color: var(--gold); font-family: 'Share Tech Mono', monospace; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; overflow: hidden; }
-
-        .sat-card { 
-            width: 90%; max-width: 500px; border: 2px solid var(--gold); padding: 30px; 
-            background: rgba(5,5,5,0.9); box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-            position: relative;
+        body { 
+            background: var(--dark); color: var(--gold); 
+            font-family: 'Share Tech Mono', monospace; 
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; margin: 0; 
         }
 
-        h2 { font-family: 'Orbitron'; text-align: center; letter-spacing: 3px; animation: glow 2s infinite alternate; }
-        @keyframes glow { from { text-shadow: 0 0 5px var(--gold); } to { text-shadow: 0 0 20px var(--gold); } }
-
-        .input-group { margin: 20px 0; }
-        input { 
-            width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; 
-            color: var(--gold); padding: 10px; outline: none; font-size: 16px; text-align: center;
+        .osint-card { 
+            width: 95%; max-width: 500px; border: 2px solid var(--gold); 
+            padding: 25px; background: rgba(5,5,5,0.95); 
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
         }
-        input:focus { border-bottom: 1px solid var(--gold); }
+
+        h2 { 
+            font-family: 'Orbitron'; text-align: center; font-size: 24px;
+            text-shadow: 0 0 10px var(--gold); margin-bottom: 20px;
+        }
+
+        .info-box { 
+            border: 1px solid #222; padding: 15px; margin-bottom: 15px; 
+            background: #080808; font-size: 12px;
+        }
+
+        .label { color: #555; text-transform: uppercase; font-size: 10px; display: block; }
+        .value { color: var(--gold); font-size: 14px; margin-bottom: 8px; display: block; }
 
         button { 
             width: 100%; padding: 15px; background: transparent; color: var(--gold); 
-            border: 1px solid var(--gold); font-family: 'Orbitron'; cursor: pointer; font-weight: bold;
+            border: 2px solid var(--gold); font-family: 'Orbitron'; cursor: pointer; 
+            font-weight: bold; transition: 0.3s;
         }
         button:hover { background: var(--gold); color: #000; }
 
-        #map-vibe { 
-            height: 150px; border: 1px solid #111; margin: 20px 0; position: relative; 
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://www.google.com/maps/vt/pb=!1m4!1m3!1i10!2i838!3i415!2m3!1e0!2sm!3i407105189!3m8!2sen!3sid!5e1105!12m4!1e68!2m2!1sset!2sRoadmap!4e0!5m1!1f2');
-            background-size: cover; overflow: hidden; display: none;
+        .terminal { 
+            height: 120px; background: #000; border-top: 1px solid #111; 
+            margin-top: 20px; padding: 10px; font-size: 11px; overflow-y: auto;
+            color: #b8860b; border-left: 3px solid var(--gold);
         }
-
-        .scanner-line { width: 100%; height: 2px; background: var(--gold); position: absolute; top: 0; animation: scan 2s linear infinite; }
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-
-        .terminal { font-size: 10px; color: #b8860b; height: 100px; overflow-y: auto; border-top: 1px solid #111; padding-top: 10px; }
+        .new-log { color: var(--gold); }
     </style>
 </head>
 <body>
 
-<div class="sat-card">
-    <h2 id="title">SAT-LINK V1</h2>
-    <div class="input-group">
-        <input type="text" id="phone" placeholder="+62 8xx-xxxx-xxxx">
-    </div>
-    
-    <button id="btn" onclick="locate()">LINK TO SATELLITE</button>
+<div class="osint-card">
+    <h2>OSINT TRACKER V1.2</h2>
 
-    <div id="map-vibe">
-        <div class="scanner-line"></div>
+    <div class="info-box">
+        <span class="label">IP Address</span>
+        <span id="ip" class="value">FETCHING...</span>
+
+        <span class="label">ISP / Provider</span>
+        <span id="isp" class="value">FETCHING...</span>
+
+        <span class="label">Precise Coordinates</span>
+        <span id="coords" class="value">WAITING FOR PERMISSION...</span>
+        
+        <span class="label">Google Maps Link</span>
+        <span id="map-link" class="value">-</span>
     </div>
 
-    <div class="terminal" id="term">> STANDBY FOR UPLINK...</div>
+    <button onclick="startTracking()">INITIATE REAL-TIME TRACKING</button>
+
+    <div class="terminal" id="term">
+        <div>> SYSTEM READY. AWAITING UPLINK...</div>
+    </div>
 </div>
 
 <script>
     function log(m) {
         const t = document.getElementById('term');
-        t.innerHTML = `<div>> ${m}</div>` + t.innerHTML;
+        t.innerHTML = `<div class="new-log">> ${m}</div>` + t.innerHTML;
     }
 
-    async function locate() {
-        const num = document.getElementById('phone').value;
-        if(!num) return alert("INPUT TARGET NUMBER!");
-
-        document.getElementById('btn').style.display = 'none';
-        document.getElementById('map-vibe').style.display = 'block';
-        
-        log(`TARGETING: ${num}`);
-        await sleep(1500); log("BYPASSING BTS FIREWALL...");
-        await sleep(2000); log("UPLINK TO SAT-COM 4A ESTABLISHED.");
-        await sleep(1500); log("TRIANGULATING SIGNAL...");
-        await sleep(2000); 
-        
-        log("SUCCESS: TARGET COORDINATES FOUND.");
-        log("LAT: -6.2088 | LONG: 106.8456");
-        log("LOC: JAKARTA, INDONESIA");
-        
-        document.getElementById('title').innerText = "TARGET LOCKED";
-        document.getElementById('title').style.animation = "none";
-        document.getElementById('title').style.color = "red";
+    // 1. Ambil Data IP & ISP (IP-API OSINT)
+    async function fetchIP() {
+        try {
+            log("SCANNING NETWORK INTERFACE...");
+            const response = await fetch('http://ip-api.com/json/');
+            const data = await response.json();
+            
+            document.getElementById('ip').innerText = data.query;
+            document.getElementById('isp').innerText = data.isp + " (" + data.as + ")";
+            log(`IP DETECTED: ${data.query}`);
+            log(`LOC: ${data.city}, ${data.country}`);
+        } catch (e) {
+            log("FAILED TO FETCH IP DATA.");
+        }
     }
 
-    function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+    // 2. Ambil Geolocation GPS (High Accuracy)
+    function startTracking() {
+        log("REQUESTING SATELLITE TRIANGULATION...");
+        
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const acc = position.coords.accuracy;
+
+                    document.getElementById('coords').innerText = `${lat}, ${lon}`;
+                    const link = `https://www.google.com/maps?q=${lat},${lon}`;
+                    document.getElementById('map-link').innerHTML = `<a href="${link}" target="_blank" style="color:white">[ OPEN IN MAPS ]</a>`;
+                    
+                    log("COORDINATES LOCKED.");
+                    log(`ACCURACY: ${acc} meters`);
+                },
+                (error) => {
+                    log("ERROR: ACCESS DENIED BY TARGET.");
+                    alert("Please allow location access for Satellite Uplink.");
+                },
+                { enableHighAccuracy: true }
+            );
+        } else {
+            log("ERROR: BROWSER NOT SUPPORTED.");
+        }
+    }
+
+    // Jalankan fetch IP saat loading
+    fetchIP();
 </script>
 
 </body>
