@@ -1,154 +1,620 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NGL RAINBOW V7.5 - GITHUB BYPASS</title>
+    <title>Portofolio | Muhamad Farhan Arsyad</title>
+
+    <script>
+        tailwind = {};
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
-        
-        :root { --gold: #ffd700; --dark: #000; }
-        * { box-sizing: border-box; }
-        body { 
-            background: var(--dark); color: var(--gold); 
-            font-family: 'Share Tech Mono', monospace; 
-            margin: 0; display: flex; justify-content: center; 
-            align-items: center; min-height: 100vh; overflow: hidden;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        @keyframes rainbow {
-            0% { color: #ff0000; } 25% { color: #ffff00; } 50% { color: #00ff00; } 75% { color: #00ffff; } 100% { color: #ff00ff; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+            overflow-x: hidden;
         }
 
-        .card { 
-            width: 95%; max-width: 450px; background: #050505;
-            border: 2px solid var(--gold); padding: 30px; 
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); text-align: center;
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        h2.rainbow {
-            font-family: 'Orbitron'; font-size: 32px; 
-            animation: rainbow 4s linear infinite; letter-spacing: 5px;
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
         }
 
-        input, textarea { 
-            width: 100%; background: transparent; border: none; 
-            border-bottom: 1px solid #222; color: white; 
-            padding: 12px; margin: 8px 0; outline: none; font-family: inherit; text-align: center;
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
-        input:focus { border-bottom: 1px solid var(--gold); }
 
-        button { 
-            width: 100%; padding: 15px; background: transparent; color: var(--gold); 
-            border: 2px solid var(--gold); font-family: 'Orbitron'; 
-            cursor: pointer; margin-top: 15px; font-weight: bold;
+        .typewriter-cursor {
+            display: inline-block;
+            width: 3px;
+            background-color: #a855f7;
+            margin-left: 4px;
+            animation: blink 1s infinite;
         }
-        button:hover { background: var(--gold); color: #000; }
 
-        .terminal { 
-            background: #000; height: 130px; border: 1px solid #111; 
-            padding: 10px; font-size: 11px; color: #b8860b; 
-            overflow-y: auto; margin-top: 20px; text-align: left;
-            border-left: 3px solid var(--gold);
-        }
-        .gold-log { color: var(--gold); }
-    </style>
-</head>
-<body>
+        @keyframes blink {
 
-<div class="card">
-    <h2 class="rainbow">XYZ ALIEN</h2>
-    <div style="font-size: 10px; margin-bottom: 20px;">NGL SPAMMER GITHUB V7.5</div>
-
-    <input type="text" id="target" placeholder="TARGET USERNAME">
-    <textarea id="msg" placeholder="MESSAGE PAYLOAD"></textarea>
-    <input type="number" id="count" placeholder="COUNT (e.g. 50)">
-    <input type="number" id="delay" placeholder="DELAY (ms) (e.g. 500)">
-
-    <button id="start-btn" onclick="startAttack()">INITIATE ATTACK</button>
-    <button id="stop-btn" onclick="stopAttack()" style="display:none; border-color: red; color: red;">ABORT MISSION</button>
-
-    <div class="terminal" id="term">> SYSTEM STANDBY...</div>
-</div>
-
-<script>
-    // --- INTEGRASI TELEGRAM LO ---
-    const TELE_TOKEN = "8622815738:AAHixf_yecRdOHx1q3LPD0CubKyrszYEH58";
-    const TELE_ID = "8224363309";
-    // -----------------------------
-
-    let isAttacking = false;
-
-    function log(m) {
-        const t = document.getElementById('term');
-        t.innerHTML = `<div class="gold-log">> ${m}</div>` + t.innerHTML;
-    }
-
-    async function sendToTele(target, count) {
-        const text = `🔥 <b>SPAM REPORT</b>%0A🎯 <b>Target:</b> @${target}%0A✅ <b>Status:</b> ${count} Messages Sent Successfully.`;
-        fetch(`https://api.telegram.org/bot${TELE_TOKEN}/sendMessage?chat_id=${TELE_ID}&text=${text}&parse_mode=html`);
-    }
-
-    function stopAttack() {
-        isAttacking = false;
-        log("STOPPING MISSION...");
-    }
-
-    async function startAttack() {
-        const target = document.getElementById('target').value;
-        const msg = document.getElementById('msg').value;
-        const count = parseInt(document.getElementById('count').value);
-        const delay = parseInt(document.getElementById('delay').value) || 500;
-
-        if(!target || !msg || !count) return alert("INPUT SEMUA DATA, KING!");
-
-        isAttacking = true;
-        document.getElementById('start-btn').style.display = 'none';
-        document.getElementById('stop-btn').style.display = 'block';
-
-        log(`STRIKE INITIATED ON @${target}...`);
-
-        let sent = 0;
-        // Pake Proxy biar ga kena blokir CORS GitHub
-        const proxy = "https://corsproxy.io/?";
-        const url = "https://ngl.link/api/submit";
-
-        for(let i = 0; i < count; i++) {
-            if(!isAttacking) break;
-
-            try {
-                const response = await fetch(proxy + encodeURIComponent(url), {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        'username': target,
-                        'question': msg,
-                        'deviceId': 'XYZ-' + Math.random().toString(36).substring(7)
-                    })
-                });
-
-                if(response.ok) {
-                    sent++;
-                    log(`SUCCESS: [${sent}/${count}] SENT.`);
-                } else {
-                    log("RATE LIMITED. COOLING DOWN...");
-                    await new Promise(r => setTimeout(r, 2000));
-                }
-            } catch (e) {
-                log("CONNECTION ERROR...");
+            0%,
+            100% {
+                opacity: 1;
             }
 
-            await new Promise(r => setTimeout(r, delay));
+            50% {
+                opacity: 0;
+            }
         }
 
-        isAttacking = false;
-        document.getElementById('start-btn').style.display = 'block';
-        document.getElementById('stop-btn').style.display = 'none';
-        
-        log("MISSION COMPLETE.");
-        sendToTele(target, sent); // Kirim laporan ke Telegram lo
-    }
-</script>
+        .hidden-page {
+            display: none !important;
+        }
+
+        .sosmed-item {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        .sosmed-item.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .text-gradient-main {
+            background: linear-gradient(to right, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+        }
+
+        .card-hover:hover {
+            border-color: rgba(16, 185, 129, 0.4);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- MAIN PAGE -->
+    <div id="main-page">
+
+        <!-- HERO -->
+        <section class="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+
+            <div class="reveal active">
+
+                <h2 class="text-emerald-400 font-bold tracking-[0.3em] uppercase mb-6 text-xs">
+                    ASSALAMU'ALAIKUM WR. WB.
+                </h2>
+
+                <h1 class="text-5xl md:text-8xl font-black mb-6 tracking-tighter">
+                    HAI PERKENALKAN <br>
+
+                    <span class="text-gradient-main">
+                        MUHAMAD FARHAN ARSYAD
+                    </span>
+                </h1>
+
+                <p class="text-slate-400 text-lg md:text-2xl mb-10">
+                    Biasa dipanggil
+
+                    <span class="text-white font-bold px-4 py-1 bg-emerald-600 rounded-lg">
+                        PAANG
+                    </span>
+                </p>
+
+                <div class="text-xl md:text-3xl font-bold min-h-[60px] text-purple-400">
+                    <span id="typewriter"></span>
+                    <span class="typewriter-cursor">&nbsp;</span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- CONTENT -->
+        <section class="max-w-6xl mx-auto py-20 px-6">
+
+            <!-- TITLE -->
+            <div class="reveal text-center mb-16">
+
+                <h2 class="text-4xl md:text-5xl font-black mb-4 uppercase">
+                    MAPEL FAV DAN
+                    <span class="text-blue-500">HOBBY KU</span>
+                </h2>
+
+                <div class="h-1.5 w-24 bg-gradient-to-r from-emerald-500 to-blue-500 mx-auto rounded-full">
+                </div>
+
+            </div>
+
+            <!-- MAPEL -->
+            <h3 class="reveal text-xl font-bold text-emerald-400 mb-8 uppercase tracking-widest text-center">
+                Mapel Favorit
+            </h3>
+
+            <div class="grid gap-6 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 mb-20">
+
+                <div class="reveal glass p-6 rounded-3xl text-center card-hover">
+                    <div class="text-3xl mb-4">🧮</div>
+                    <h4 class="font-black text-blue-400">Matematika</h4>
+                </div>
+
+                <div class="reveal glass p-6 rounded-3xl text-center card-hover">
+                    <div class="text-3xl mb-4">🧪</div>
+                    <h4 class="font-black text-emerald-400">IPA</h4>
+                </div>
+
+                <div class="reveal glass p-6 rounded-3xl text-center card-hover">
+                    <div class="text-3xl mb-4">💻</div>
+                    <h4 class="font-black text-cyan-400">Informatika</h4>
+                </div>
+
+                <div class="reveal glass p-6 rounded-3xl text-center card-hover">
+                    <div class="text-3xl mb-4">📜</div>
+                    <h4 class="font-black text-emerald-400">Sejarah</h4>
+                </div>
+
+                <div class="reveal glass p-6 rounded-3xl text-center card-hover">
+                    <div class="text-3xl mb-4">🕌</div>
+                    <h4 class="font-black text-blue-400">PAI</h4>
+                </div>
+
+            </div>
+
+            <!-- HOBBY -->
+            <h3 class="reveal text-xl font-bold text-blue-400 mb-8 uppercase tracking-widest text-center">
+                Hobby
+            </h3>
+
+            <div class="grid gap-6 grid-cols-1 md:grid-cols-3 mb-24">
+
+                <div class="reveal glass p-8 rounded-[32px] card-hover">
+                    <div class="text-4xl mb-6">🎮</div>
+
+                    <h4 class="text-2xl font-black mb-3">
+                        Main Epep
+                    </h4>
+
+                    <p class="text-slate-400 text-sm">
+                        Pasti buat ngilangin cape sama pusing.
+                    </p>
+                </div>
+
+                <div class="reveal glass p-8 rounded-[32px] card-hover">
+                    <div class="text-4xl mb-6">⌨️</div>
+
+                    <h4 class="text-2xl font-black mb-3">
+                        Ngoding
+                    </h4>
+
+                    <p class="text-slate-400 text-sm">
+                        Walaupun pake AI tetep aja pusing mikir tema.
+                    </p>
+                </div>
+
+                <div class="reveal glass p-8 rounded-[32px] card-hover">
+                    <div class="text-4xl mb-6">😴</div>
+
+                    <h4 class="text-2xl font-black mb-3">
+                        Tidur
+                    </h4>
+
+                    <p class="text-slate-400 text-sm">
+                        Jelas pastinya tidur cuy.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- SOSMED -->
+            <div class="reveal text-center mb-24 bg-white/5 py-16 rounded-[48px] border border-white/5">
+
+                <h3 class="text-xl font-black mb-8 tracking-widest text-emerald-400 uppercase">
+                    SOSMED & KONTAK
+                </h3>
+
+                <button onclick="toggleSosmed()"
+                    class="w-20 h-20 btn-action rounded-full flex items-center justify-center mx-auto">
+
+                    <i class="fas fa-plus text-2xl text-white transition-transform duration-500"
+                        id="icon-plus"></i>
+
+                </button>
+
+                <div id="sosmed-container"
+                    class="mt-10 flex flex-wrap justify-center gap-6">
+
+                    <a href="https://instagram.com/farhan_arayad"
+                        target="_blank"
+                        class="sosmed-item glass w-14 h-14 rounded-xl flex items-center justify-center text-2xl hover:text-pink-400">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+
+                    <a href="https://tiktok.com/@jadi.gini.le122"
+                        target="_blank"
+                        class="sosmed-item glass w-14 h-14 rounded-xl flex items-center justify-center text-2xl hover:text-cyan-400">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+
+                    <a href="https://wa.me/6285773038821"
+                        target="_blank"
+                        class="sosmed-item glass w-14 h-14 rounded-xl flex items-center justify-center text-2xl hover:text-green-400">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+
+                    <a href="https://t.me/thisisangzz"
+                        target="_blank"
+                        class="sosmed-item glass w-14 h-14 rounded-xl flex items-center justify-center text-2xl hover:text-blue-400">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- BUTTON -->
+            <div class="reveal flex flex-col md:flex-row justify-center gap-4 mb-24">
+
+                <button onclick="goToPage('birthday-page')"
+                    class="px-10 py-5 btn-action rounded-2xl font-black text-white hover:scale-105 transition-all">
+
+                    Kapan aku lahir?
+
+                </button>
+
+                <button onclick="goToPage('coding-page')"
+                    class="px-10 py-5 glass rounded-2xl font-black text-blue-400 hover:bg-white/10 transition-all">
+
+                    Bahasa Coding
+
+                </button>
+
+            </div>
+
+            <!-- PENUTUP -->
+            <div class="reveal text-center mb-24">
+
+                <h3 class="text-6xl md:text-8xl font-black italic mb-4">
+                    Sekian terima gaji
+                </h3>
+
+                <p class="text-emerald-400 uppercase tracking-widest font-bold">
+                    Wassalamu'alaikum WR. WB.
+                </p>
+
+            </div>
+
+            <!-- CLOCK -->
+            <div class="reveal glass p-8 rounded-[48px]">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+
+                    <div class="bg-emerald-500/5 p-8 rounded-3xl text-center">
+
+                        <p class="text-xs uppercase text-emerald-400 mb-2">
+                            Waktu Sekarang
+                        </p>
+
+                        <div id="clock" class="text-5xl font-black">
+                            00:00:00
+                        </div>
+
+                    </div>
+
+                    <div class="bg-blue-500/5 p-8 rounded-3xl text-center">
+
+                        <p class="text-xs uppercase text-blue-400 mb-2">
+                            Tanggal
+                        </p>
+
+                        <div id="date" class="text-xl font-bold">
+                            ...
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <footer class="mt-20 text-center text-slate-500 text-sm">
+                © 2026 MUHAMAD FARHAN ARSYAD
+            </footer>
+
+        </section>
+
+    </div>
+
+    <!-- BIRTHDAY PAGE -->
+    <div id="birthday-page" class="hidden-page min-h-screen flex items-center justify-center p-6">
+
+        <div class="glass p-12 rounded-[48px] text-center relative max-w-4xl w-full">
+
+            <button onclick="goToPage('main-page')"
+                class="absolute top-8 left-8 text-slate-400 hover:text-emerald-400">
+
+                ← KEMBALI
+
+            </button>
+
+            <div class="text-7xl mb-6">
+                🎂
+            </div>
+
+            <h2 class="text-4xl md:text-6xl font-black text-gradient-main mb-8">
+                31 JANUARI 2013
+            </h2>
+
+            <div class="grid grid-cols-3 gap-4">
+
+                <div class="bg-white/5 p-8 rounded-3xl">
+                    <span id="years"
+                        class="text-4xl md:text-6xl font-black block text-emerald-400">0</span>
+
+                    <span class="text-xs uppercase text-slate-500">
+                        Tahun
+                    </span>
+                </div>
+
+                <div class="bg-white/5 p-8 rounded-3xl">
+                    <span id="months"
+                        class="text-4xl md:text-6xl font-black block text-blue-400">0</span>
+
+                    <span class="text-xs uppercase text-slate-500">
+                        Bulan
+                    </span>
+                </div>
+
+                <div class="bg-white/5 p-8 rounded-3xl">
+                    <span id="days"
+                        class="text-4xl md:text-6xl font-black block text-emerald-400">0</span>
+
+                    <span class="text-xs uppercase text-slate-500">
+                        Hari
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CODING PAGE -->
+    <div id="coding-page" class="hidden-page min-h-screen py-20 px-6">
+
+        <div class="max-w-4xl mx-auto">
+
+            <button onclick="goToPage('main-page')"
+                class="mb-10 text-slate-400 hover:text-blue-400">
+
+                ← KEMBALI
+
+            </button>
+
+            <h2 class="text-4xl md:text-6xl font-black text-center mb-12 text-gradient-main">
+                BAHASA CODING
+            </h2>
+
+            <div class="space-y-4">
+
+                <div class="glass p-8 rounded-3xl border-l-8 border-emerald-500">
+                    <h3 class="text-2xl font-black">C++</h3>
+                </div>
+
+                <div class="glass p-8 rounded-3xl border-l-8 border-blue-500">
+                    <h3 class="text-2xl font-black">Python</h3>
+                </div>
+
+                <div class="glass p-8 rounded-3xl border-l-8 border-cyan-400">
+                    <h3 class="text-2xl font-black">HTML & CSS</h3>
+                </div>
+
+                <div class="glass p-8 rounded-3xl border-l-8 border-blue-400">
+                    <h3 class="text-2xl font-black">JavaScript</h3>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const texts = [
+            "Saya adalah finalis Olimpiade cabang matematika.",
+            "Yuk berkenalan lebih dalam dengan ku."
+        ];
+
+        let tIdx = 0;
+        let cIdx = 0;
+        let del = false;
+
+        function type() {
+
+            const el = document.getElementById('typewriter');
+
+            const full = texts[tIdx];
+
+            el.textContent = del
+                ? full.substring(0, cIdx--)
+                : full.substring(0, cIdx++);
+
+            let speed = del ? 30 : 60;
+
+            if (!del && cIdx > full.length) {
+                del = true;
+                speed = 2500;
+            }
+
+            else if (del && cIdx === 0) {
+                del = false;
+                tIdx = (tIdx + 1) % texts.length;
+                speed = 500;
+            }
+
+            setTimeout(type, speed);
+        }
+
+        function updateClock() {
+
+            const now = new Date();
+
+            document.getElementById('clock').textContent =
+                now.toLocaleTimeString('id-ID', {
+                    hour12: false
+                });
+
+            document.getElementById('date').textContent =
+                now.toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+        }
+
+        function calcAge() {
+
+            const birth = new Date("2013-01-31");
+
+            const now = new Date();
+
+            let years = now.getFullYear() - birth.getFullYear();
+
+            let months = now.getMonth() - birth.getMonth();
+
+            let days = now.getDate() - birth.getDate();
+
+            if (days < 0) {
+
+                months--;
+
+                days += new Date(
+                    now.getFullYear(),
+                    now.getMonth(),
+                    0
+                ).getDate();
+            }
+
+            if (months < 0) {
+
+                years--;
+
+                months += 12;
+            }
+
+            document.getElementById('years').innerText = years;
+            document.getElementById('months').innerText = months;
+            document.getElementById('days').innerText = days;
+        }
+
+        function goToPage(id) {
+
+            document.querySelectorAll(
+                '#main-page, #birthday-page, #coding-page'
+            ).forEach(page => {
+                page.classList.add('hidden-page');
+            });
+
+            document.getElementById(id).classList.remove('hidden-page');
+
+            if (id === 'birthday-page') {
+                calcAge();
+            }
+
+            window.scrollTo(0, 0);
+        }
+
+        function toggleSosmed() {
+
+            const items = document.querySelectorAll('.sosmed-item');
+
+            const icon = document.getElementById('icon-plus');
+
+            const show = !items[0].classList.contains('show');
+
+            items.forEach((item, index) => {
+
+                if (show) {
+
+                    setTimeout(() => {
+                        item.classList.add('show');
+                    }, index * 80);
+
+                } else {
+
+                    item.classList.remove('show');
+
+                }
+
+            });
+
+            icon.style.transform = show
+                ? 'rotate(45deg)'
+                : 'rotate(0deg)';
+        }
+
+        function handleReveal() {
+
+            document.querySelectorAll(".reveal").forEach(el => {
+
+                if (
+                    el.getBoundingClientRect().top <
+                    window.innerHeight - 50
+                ) {
+                    el.classList.add("active");
+                }
+
+            });
+        }
+
+        window.onload = () => {
+
+            type();
+
+            updateClock();
+
+            setInterval(updateClock, 1000);
+
+            handleReveal();
+
+            window.addEventListener("scroll", handleReveal);
+        };
+
+    </script>
 
 </body>
-</html>
+
+    </html>
